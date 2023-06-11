@@ -7,7 +7,9 @@ const Header = () => {
 		<header className="header">
 			<h1>MovieClub</h1>
 			<nav>
-				<NavLink to="/">Início</NavLink>
+				<NavLink to="/" end>
+					Início
+				</NavLink>
 				<NavLink to="/about">Sobre</NavLink>
 				<NavLink to="/me">Perfil</NavLink>
 			</nav>
