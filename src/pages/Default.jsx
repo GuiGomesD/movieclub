@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './css/tailwind.css'
-import './css/App.css'
+import reactLogo from '../assets/react.svg'
+import viteLogo from '../../public/vite.svg'
+import '../css/tailwind.css'
+import '../css/App.css'
 
 const tailwindLogo =
 	'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg'
