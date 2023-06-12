@@ -1,5 +1,6 @@
 import React from 'react'
 import Header from './components/Header'
+import Footer from './components/Footer'
 import Home from './Home'
 import Default from './pages/Default'
 import About from './pages/About'
@@ -20,6 +21,7 @@ function App() {
 				<Route path="/default" element={<Default />} />
 				<Route path="*" element={<Error404 />} />
 			</Routes>
+			<Footer />
 		</BrowserRouter>
 	)
 }
