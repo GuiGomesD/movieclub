@@ -16,8 +16,8 @@ function App() {
 			<Header />
 			<Routes>
 				<Route path="/" element={<Home />} />
-				<Route path="/me" element={<Me />} />
 				<Route path="/about" element={<About />} />
+				<Route path="/profile/me" element={<Me />} />
 				<Route path="/default" element={<Default />} />
 				<Route path="*" element={<Error404 />} />
 			</Routes>
