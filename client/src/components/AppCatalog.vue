@@ -1,50 +1,52 @@
 <template>
-  <div class="catalogo">
-    <div class="linha-filmes">
-      <div class="filme-card" v-for="(filme, index) in filmes" :key="index">
-        <div class="image-filme"><img :src="`https://image.tmdb.org/t/p/w500/${filme.poster_path}`" :alt="filme.title" class="imagem-filme" /></div>
-        <div class="filme-info">
-          <h3 class="titulo-filme">{{ filme.title }}</h3>
-          <h3 class="rate-filme">{{ filme.vote_average.toFixed(1) }}</h3>
+  <div class="catalog">
+    <div class="movie-row">
+      <div class="movie-card" v-for="(movie, index) in movies" :key="index">
+        <div class="movie-image">
+          <img :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`" :alt="movie.title" class="image-movie" />
+        </div>
+        <div class="movie-info">
+          <h3 class="movie-title">{{ movie.title }}</h3>
+          <h3 class="movie-rating">{{ movie.vote_average.toFixed(1) }}</h3>
         </div>
       </div>
     </div>
   </div>
 </template>
-  
+
 <script>
   import axios from 'axios';
-  
+
   export default {
-    name: "Catalogo",
+    name: "Catalog",
     data() {
       return {
-        filmes: [],
+        movies: [],
       };
     },
     created() {
-      this.buscarFilmes();
+      this.fetchMovies();
     },
     methods: {
-      async buscarFilmes() {
-        const apiKey = '348aa5fbb58b540a2619bafec8e8e1d5';
+      async fetchMovies() {
+        const apiKey = import.meta.env.VITE_APP_API_KEY;
         const url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=1`;
-  
+
         try {
           const response = await axios.get(url);
-          this.filmes = response.data.results;
+          this.movies = response.data.results;
         } catch (error) {
-          console.error('Erro ao buscar filmes:', error);
+          console.error('Error fetching movies:', error);
         }
       },
     },
   };
 </script>
-  
+
 <style scoped>
   @import url("https://fonts.googleapis.com/css2?family=Gothic+A1:wght@500&display=swap");
 
-  .catalogo {
+  .catalog {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -52,15 +54,15 @@
     width: 1200px;
     margin: 50px auto;
   }
-  
-  .linha-filmes {
+
+  .movie-row {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
   }
-  
-  .filme-card {
+
+  .movie-card {
     display: flex;
     flex-direction: column;
     width: 220px;
@@ -70,39 +72,37 @@
     font-family: "Gothic A1", sans-serif;
   }
 
-  .filme-card:hover {
+  .movie-card:hover {
     opacity: 80%;
   }
 
-  .filme-info {
+  .movie-info {
     display: flex;
     justify-content: space-between;
     font-size: 16px;
     align-items: center;
     padding: 10px 8px;
   }
-  
-  .imagem-filme {
+
+  .image-movie {
     width: 100%;
     height: auto;
     border-radius: 8px 8px 0 0;
   }
 
-  .rate-filme {
+  .movie-rating {
     background-color: #252525;
     padding: 3px;
     border-radius: 5px;
   }
-  
-  .titulo-filme:hover, .rate-filme:hover {
+
+  .movie-title:hover, .movie-rating:hover {
     color: rgb(163, 162, 162);
   }
 
   @media (max-width: 1215px) {
-  .catalogo {
-    width: 100%;
+    .catalog {
+      width: 100%;
+    }
   }
-}
-
 </style>
-  

@@ -32,15 +32,15 @@
       }
     },
     async created() {
-      const apiKey = "348aa5fbb58b540a2619bafec8e8e1d5";
-      const url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=pt-BR`;
+      const apiKey = import.meta.env.VITE_APP_API_KEY;
+      const url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US`;
   
       try {
         const response = await axios.get(url);
         this.banners = response.data.results;
         this.startBannerRotation();
       } catch (error) {
-        console.error("Erro ao buscar os banners:", error);
+        console.error("Error fetching banners:", error);
       }
     },
     methods: {
