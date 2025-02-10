@@ -1,25 +1,25 @@
 <template>
   <div id="app">
-    <Cabecalho />
-    <banner />
+    <AppHeader />
+    <AppBanner />
     <router-view />
-    <catalogo />
-    <rodape />
+    <AppCatalog />
+    <AppFooter />
   </div>
 </template>
 
 <script>
-  import Cabecalho from './components/Cabecalho.vue';
-  import banner from './components/banner.vue';
-  import catalogo from './components/catalogo.vue';
-  import rodape from './components/rodape.vue'
+  import AppHeader from './components/AppHeader.vue';
+  import AppBanner from './components/AppBanner.vue';
+  import AppCatalog from './components/AppCatalog.vue';
+  import AppFooter from './components/AppFooter.vue'
 
   export default {
     components: {
-      Cabecalho,
-      banner,
-      catalogo,
-      rodape
+      AppHeader,
+      AppBanner,
+      AppCatalog,
+      AppFooter
     }
   };;
 </script>
