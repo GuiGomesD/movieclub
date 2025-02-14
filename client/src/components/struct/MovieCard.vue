@@ -8,7 +8,7 @@
         <h3 class="movie-title text-nowrap truncate whitespace-nowrap overflow-hidden pt1">{{ movie.title }}</h3>
       </div>
       <div class="flex justify-between">
-        <p class="text-gray-500">Gender</p>
+        <p class="text-gray-500">{{ movieGenres[0] }}</p>
         <p class="movie-rating">{{ movie.vote_average.toFixed(1) }}</p>
       </div>
     </div>
@@ -21,6 +21,33 @@ export default {
   props: {
     movie: Object,
     required: true
+  },
+  data() {
+    return {
+      genresMap: {
+        28: "Action",
+        12: "Adventure",
+        16: "Animation",
+        35: "Comedy",
+        80: "Crime",
+        18: "Drama",
+        14: "Fantasy",
+        27: "Horror",
+        53: "Thriller",
+        10749: "Romance",
+        878: "Sci-Fi"
+      }
+    };
+  },
+  computed: {
+    movieGenres() {
+      if (this.movie.genres) {
+        return this.movie.genres.map(genre => genre.name);
+      } else if (this.movie.genre_ids) {
+        return this.movie.genre_ids.map(id => this.genresMap[id] || "Desconhecido");
+      }
+      return [];
+    }
   }
 };
 </script>
