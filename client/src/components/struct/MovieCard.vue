@@ -9,7 +9,7 @@
       </div>
       <div class="flex justify-between">
         <p class="text-gray-500">{{ movieGenres[0] }}</p>
-        <p class="movie-rating">{{ movie.vote_average.toFixed(1) }}</p>
+        <p class="movie-rating" :style="{ backgroundColor: ratingColor }">{{ movie.vote_average.toFixed(1) }}</p>
       </div>
     </div>
   </div>
@@ -47,6 +47,12 @@ export default {
         return this.movie.genre_ids.map(id => this.genresMap[id] || "Desconhecido");
       }
       return [];
+    },
+    ratingColor() {
+      const vote = this.movie.vote_average;
+      if (vote >= 7.0) return "#2E7D32";
+      if (vote >= 4.0) return "#FF8F00";
+      return "#D32F2F";
     }
   }
 };
@@ -89,6 +95,6 @@ export default {
 
 .movie-title:hover,
 .movie-rating:hover {
-  color: rgb(163, 162, 162);
+  opacity: 70%;
 }
 </style>
