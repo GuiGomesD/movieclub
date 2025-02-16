@@ -1,7 +1,7 @@
 <template>
   <div class="movie-card cursor-pointer">
     <div class="movie-image">
-      <img :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`" :alt="movie.title" class="image-movie" />
+      <img :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`" :alt="movie.title" class="image-movie min-h-[330px]" />
     </div>
     <div class="movie-info">
       <div>
@@ -9,7 +9,7 @@
       </div>
       <div class="flex justify-between">
         <p class="text-gray-500">{{ movieGenres[0] }}</p>
-        <p class="movie-rating" :style="{ backgroundColor: ratingColor }">{{ movie.vote_average.toFixed(1) }}</p>
+        <p class="movie-rating" :style="{ color: ratingColor }">{{ movie.vote_average.toFixed(1) }}</p>
       </div>
     </div>
   </div>
@@ -50,8 +50,9 @@ export default {
     },
     ratingColor() {
       const vote = this.movie.vote_average;
-      if (vote >= 7.0) return "#2E7D32";
-      if (vote >= 4.0) return "#FF8F00";
+      if (vote >= 8.0) return "#00f2d2";
+      if (vote >= 7.0) return "#2cad32";
+      if (vote >= 6.0) return "#ffa015";
       return "#D32F2F";
     }
   }
