@@ -10,7 +10,13 @@
         justify-content: center;
         align-items: center;
         background-color: #111111;
-        padding: 150px 0px;
+        min-height: 400px;
         color: #F1F1F1;
+    }
+
+    @media(max-width:600px) {
+        .footer {
+            border-top: 1px solid rgb(61, 61, 61);
+        }
     }
 </style>
