@@ -9,7 +9,7 @@
 
 <script>
   import AppHeader from '../components/app/AppHeader.vue';
-  import AppBanner from '../components/app/AppBanner.vue';
+  import AppBanner from '../components/struct/Banner.vue';
   import AppCatalog from '../components/app/AppCatalog.vue';
   import AppFooter from '../components/app/AppFooter.vue'
 
