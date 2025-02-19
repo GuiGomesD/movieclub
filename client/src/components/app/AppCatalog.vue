@@ -58,7 +58,7 @@ export default {
       currentPage: 1,
       moviesPerPage: 40,
       totalPages: 1,
-      loading: false, // Adicionado estado de carregamento
+      loading: false,
     };
   },
   computed: {
@@ -92,7 +92,7 @@ export default {
   },
   methods: {
     async fetchMovies() {
-      this.loading = true; // Inicia o carregamento
+      this.loading = true;
       const apiKey = import.meta.env.VITE_APP_API_KEY;
       const url = this.searchQuery
         ? `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${encodeURIComponent(this.searchQuery)}&page=${this.currentPage}`
@@ -105,7 +105,7 @@ export default {
       } catch (error) {
         console.error("Error fetching movies:", error);
       } finally {
-        this.loading = false; // Finaliza o carregamento
+        this.loading = false;
       }
     },
     goToPage(page) {
@@ -221,4 +221,25 @@ export default {
     width: 100%;
   }
 }
+
+@media (max-width:600px) {
+  .pagination {
+    justify-content: center;
+    gap: 2px;
+    width: 100%;
+  }
+  .nav-button {
+    background-color: #1a1a1a;
+    color: #F1F1F1;
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+
+  .page-button {
+    padding: 7px 14px;
+    border-radius: 30px;
+    font-size: 13px;
+  }
+}
+
 </style>
