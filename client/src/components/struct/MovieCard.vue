@@ -9,7 +9,7 @@
       </div>
       <div class="flex justify-between">
         <p class="text-gray-500">{{ movieGenres[0] }}</p>
-        <p class="movie-rating" :style="{ color: ratingColor }">{{ movie.vote_average.toFixed(1) }}</p>
+        <p class="movie-rating" :style="{ color: ratingColor }">{{ movie.vote_average !== undefined ? movie.vote_average.toFixed(1) : 'N/A' }}</p>
       </div>
     </div>
   </div>
