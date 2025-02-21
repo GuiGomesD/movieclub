@@ -262,7 +262,8 @@ export default {
   justify-content: center;
   color: rgb(163, 162, 162);
   font-size: 20px;
-  margin: 140px;
+  margin: 140px 0px;
+  width: 100%;
 }
 
 .loading-container {
