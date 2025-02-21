@@ -35,7 +35,12 @@ export default {
         27: "Horror",
         53: "Thriller",
         10749: "Romance",
-        878: "Sci-Fi"
+        878: "Sci-Fi",
+        10402: "Music",
+        9648: "Mystery",
+        37: "Western",
+        10751: "Family",
+        878: "Science Fiction",
       }
     };
   },
