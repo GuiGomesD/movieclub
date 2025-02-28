@@ -1,18 +1,20 @@
 <template>
-  <div class="movie-card cursor-pointer">
-    <div class="movie-image">
-      <img :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`" :alt="movie.title" class="image-movie min-h-[330px]" />
-    </div>
-    <div class="movie-info">
-      <div>
-        <h3 class="movie-title text-nowrap truncate whitespace-nowrap overflow-hidden pt1">{{ movie.title }}</h3>
+  <router-link :to="`/movie/${movie.id}`" class="movie-card cursor-pointer">
+    <div class="movie-card cursor-pointer">
+      <div class="movie-image">
+        <img :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`" :alt="movie.title" class="image-movie min-h-[330px]" />
       </div>
-      <div class="flex justify-between">
-        <p class="text-gray-500">{{ movieGenres[0] }}</p>
-        <p class="movie-rating" :style="{ color: ratingColor }">{{ movie.vote_average !== undefined ? movie.vote_average.toFixed(1) : 'N/A' }}</p>
+      <div class="movie-info">
+        <div>
+          <h3 class="movie-title text-nowrap truncate whitespace-nowrap overflow-hidden pt1">{{ movie.title }}</h3>
+        </div>
+        <div class="flex justify-between">
+          <p class="text-gray-500">{{ movieGenres[0] }}</p>
+          <p class="movie-rating" :style="{ color: ratingColor }">{{ movie.vote_average !== undefined ? movie.vote_average.toFixed(1) : 'N/A' }}</p>
+        </div>
       </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>
