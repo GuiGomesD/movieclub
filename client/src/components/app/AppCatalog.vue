@@ -224,7 +224,7 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   width: 1200px;
-  margin: 50px auto;
+  margin: 50px auto 10px auto;
   padding-left: 20px;
 }
 
