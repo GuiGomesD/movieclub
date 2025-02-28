@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <router-view />
-    <AppHeader @search="updateSearch" />
     <Catalog :searchQuery="searchQuery" />
   </div>
 </template>
