@@ -30,6 +30,14 @@ export default {
       this.searchQuery = query;
     },
   },
+  created() {
+    this.searchQuery = this.$route.query.search || "";
+  },
+  watch: {
+    '$route.query.search': function(newQuery) {
+      this.searchQuery = newQuery || "";
+    }
+  }
 };
 </script>
 

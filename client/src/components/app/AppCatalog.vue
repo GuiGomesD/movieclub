@@ -273,7 +273,7 @@ export default {
   justify-content: center;
   color: white;
   font-size: 18px;
-  margin-top: 150px;
+  margin: 150px 0px;
 }
 
 .loading-icon {
