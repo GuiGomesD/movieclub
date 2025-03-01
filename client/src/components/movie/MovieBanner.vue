@@ -22,7 +22,11 @@
           <div class="movie-metadata">
             <p><strong>Genres:</strong> {{ movie.genres.map(g => g.name).join(", ") }}</p>
             <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
-            <p><strong>Rating:</strong> <span class="movie-rating">{{ movie.vote_average.toFixed(1) }}/10</span></p>
+            <p><strong>Rating: </strong> 
+              <span class="movie-rating" :style="{ color: ratingColor }">
+                {{ movie.vote_average.toFixed(1) }}/10
+              </span>
+            </p>
             <p><strong>Duration:</strong> {{ movie.runtime }} min</p>
           </div>
 
@@ -34,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
@@ -48,7 +52,18 @@ onMounted(async () => {
   );
   movie.value = await response.json();
 });
+
+const ratingColor = computed(() => {
+  if (!movie.value) return "#ccc";
+  const vote = movie.value.vote_average;
+  if (vote >= 8.0) return "#00f2d2";
+  if (vote >= 7.0) return "#2cad32";
+  if (vote >= 6.0) return "#ffa015";
+  return "#D32F2F";
+});
+
 </script>
+
 
 <style scoped>
 .movie-container {
@@ -107,6 +122,7 @@ onMounted(async () => {
   align-items: center;
   gap: 20px;
   background-color: rgba(0, 0, 0, 0.329);
+  border-radius: 10px;
   padding: 10px;
 }
 
@@ -121,6 +137,7 @@ onMounted(async () => {
   width: 350px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s;
+  border-radius: 8px;
 }
 
 .movie-details {

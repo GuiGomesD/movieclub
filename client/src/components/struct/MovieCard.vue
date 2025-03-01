@@ -10,7 +10,7 @@
         </div>
         <div class="flex justify-between">
           <p class="text-gray-500">{{ movieGenres[0] }}</p>
-          <p class="movie-rating" :style="{ color: ratingColor }">{{ movie.vote_average !== undefined ? movie.vote_average.toFixed(1) : 'N/A' }}</p>
+          <div class="movie-rating" :style="{ color: ratingColor }"><span class="rating">{{ movie.vote_average !== undefined ? movie.vote_average.toFixed(1) : 'N/A' }}</span></div>
         </div>
       </div>
     </div>
@@ -95,7 +95,13 @@ export default {
   border-radius: 8px 8px 0 0;
 }
 
+.rating {
+  position: relative;
+  top: 2px;
+}
+
 .movie-rating {
+  display: flex;
   background-color: #252525;
   padding: 3px;
   border-radius: 5px;

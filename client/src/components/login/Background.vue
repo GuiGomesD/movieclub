@@ -1,7 +1,9 @@
 <template>
   <div class="Background">
     <div class="header">
-      <div class="logo"><h1><a href="http://localhost:3000/">MovieClub</a></h1></div>
+      <router-link :to="`/`" id="logo">
+        <div class="logo"><h1>MovieClub</h1></div>
+      </router-link>
     </div>
   </div>
 </template>
@@ -25,17 +27,19 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: -1;
+    z-index: 1;
   }
 
   .header {
     display: flex;
     justify-content: flex-start;
     padding: 20px 12%;
+    position: relative;
+    z-index: 2;
   }
 
   .logo {
-    z-index: 2;
+    z-index: 3;
   }
 
   .logo h1 {
