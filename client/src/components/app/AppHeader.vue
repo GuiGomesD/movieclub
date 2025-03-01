@@ -3,15 +3,17 @@
     <div class="wrap max-w-[1180px] mx-auto">
       <router-link :to="`/`" id="logo">
         <div id="logo">
-          <h1>MovieClub</h1>
+          <a href="/">
+            <h1>MovieClub</h1>
+          </a>
         </div>
       </router-link>
       <nav class="menu" :class="{ active: menuOpen }">
         <ul>
-          <li><a href="/action">Action</a></li>
-          <li><a href="/adventure">Adventure</a></li>
-          <li><a href="/animation">Animation</a></li>
-          <li><a href="/superheroes">Superheroes</a></li>
+          <li><a href="/genre/action">Action</a></li>
+          <li><a href="/genre/adventure">Adventure</a></li>
+          <li><a href="/genre/animation">Animation</a></li>
+          <li><a href="/genre/horror">Horror</a></li>
         </ul>
         <div class="search">
           <input
