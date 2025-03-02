@@ -2,12 +2,15 @@
   <div id="app">
     <AppHeader @search="updateSearch" />
     <AppBanner />
-    <AppCatalog :searchQuery="searchQuery" />
+    <AppCatalog :searchQuery="searchQuery" :genre="genre" />
     <AppFooter />
   </div>
 </template>
 
 <script>
+import { ref, watch } from "vue";
+import { useRoute } from "vue-router";
+
 import AppHeader from "../components/app/AppHeader.vue";
 import AppBanner from "../components/struct/Banner.vue";
 import AppCatalog from "../components/app/AppCatalog.vue";
@@ -20,20 +23,40 @@ export default {
     AppCatalog,
     AppFooter,
   },
-  data() {
+  setup() {
+    const route = useRoute();
+    const searchQuery = ref("");
+    const genre = ref(route.params.genreValue || "");
+
+    watch(
+      () => route.params.genreValue,
+      (newGenre) => {
+        genre.value = newGenre || "";
+      }
+    );
+
+    const updateSearch = (query) => {
+      searchQuery.value = query;
+    };
+
     return {
-      searchQuery: "",
+      searchQuery,
+      genre,
+      updateSearch,
     };
   },
-  methods: {
-    updateSearch(query) {
-      this.searchQuery = query;
-    },
+  created() {
+    this.searchQuery = this.$route.query.search || "";
   },
+  watch: {
+    '$route.query.search': function(newQuery) {
+      this.searchQuery = newQuery || "";
+    }
+  }
 };
 </script>
 
-<style>
+<style scoped>
 * {
   margin: 0;
   padding: 0;
