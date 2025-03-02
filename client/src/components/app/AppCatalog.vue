@@ -63,8 +63,10 @@ export default {
       currentPage: 1,
       totalPages: 1,
       loading: false,
-      selectedGenre: "",
-      selectedRating: "",
+      genres: [],
+      selectedGenre: '',
+      selectedRating: '',
+      allMovies: [], 
       genresMap: {
         28: "Action",
         12: "Adventure",
@@ -100,7 +102,10 @@ export default {
   watch: {
     searchQuery: {
       immediate: true,
-      handler() {
+      handler(newQuery) {
+        if (!newQuery) {
+          this.allMovies = [];
+        }
         this.currentPage = 1;
         this.fetchMovies();
       },
@@ -132,6 +137,23 @@ export default {
     this.fetchMovies();
   },
   methods: {
+    async fetchAllMovies() {
+      const apiKey = import.meta.env.VITE_APP_API_KEY;
+      let allMovies = [];
+      let currentPage = 1;
+      let totalPages = 1;
+
+      try {
+        while (currentPage <= totalPages) {
+          const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${encodeURIComponent(this.searchQuery)}&page=${currentPage}`;
+          const response = await axios.get(url);
+          allMovies = allMovies.concat(response.data.results);
+          totalPages = response.data.total_pages;
+          currentPage++;
+        }
+      } catch (error) {
+        console.error("Error fetching all movies:", error);
+      }
     async fetchMovies() {
   this.loading = true;
   const apiKey = import.meta.env.VITE_APP_API_KEY;
@@ -142,6 +164,56 @@ export default {
     if (this.selectedGenre && this.selectedGenre !== "") {
       let genreId = Number(this.selectedGenre);
 
+    async fetchMovies() {
+      this.loading = true;
+
+      try {
+        if (this.searchQuery) {
+          if (this.allMovies.length === 0) {
+            this.allMovies = await this.fetchAllMovies();
+          }
+
+          let filteredMovies = this.allMovies;
+
+          if (this.selectedGenre) {
+            filteredMovies = filteredMovies.filter(movie =>
+              movie.genre_ids && movie.genre_ids.includes(Number(this.selectedGenre))
+            );
+          }
+
+          if (this.selectedRating === 'asc') {
+            filteredMovies.sort((a, b) => a.vote_average - b.vote_average);
+          } else if (this.selectedRating === 'desc') {
+            filteredMovies.sort((a, b) => b.vote_average - a.vote_average);
+          }
+
+          const startIndex = (this.currentPage - 1) * this.moviesPerPage;
+          const endIndex = startIndex + this.moviesPerPage;
+          this.movies = filteredMovies.slice(startIndex, endIndex);
+
+          this.totalPages = Math.min(10, Math.ceil(filteredMovies.length / this.moviesPerPage));
+        } else {
+          const apiKey = import.meta.env.VITE_APP_API_KEY;
+          let url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&page=${this.currentPage}`;
+
+          if (this.selectedGenre) {
+            url += `&with_genres=${this.selectedGenre}`;
+          }
+
+          if (this.selectedRating === 'asc') {
+            url += `&sort_by=vote_average.asc`;
+          } else if (this.selectedRating === 'desc') {
+            url += `&sort_by=vote_average.desc`;
+          }
+
+          const response = await axios.get(url);
+          this.movies = response.data.results;
+          this.totalPages = response.data.total_pages;
+        }
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      } finally {
+        this.loading = false;
       // If NaN, find id
       if (isNaN(genreId)) {
         genreId = Object.keys(this.genresMap).find(
