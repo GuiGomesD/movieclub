@@ -7,7 +7,7 @@
   </div>
 
   <div v-else class="catalog">
-    <div class="filters">
+    <div class="filters" v-if="!searchQuery">
       <select v-model="selectedGenre" @change="fetchMovies">
         <option value="">All Genres</option>
         <option v-for="(name, id) in genresMap" :key="id" :value="id">{{ name }}</option>
@@ -20,9 +20,7 @@
       </select>
     </div>
 
-    <div v-if="movies.length === 0" class="no-movies">
-      No movies found.
-    </div>
+    <div v-if="movies.length === 0" class="no-movies">No movies found.</div>
 
     <div v-else class="movie-row">
       <MovieCard v-for="(movie, index) in movies" :key="index" :movie="movie" />
@@ -63,10 +61,8 @@ export default {
       currentPage: 1,
       totalPages: 1,
       loading: false,
-      genres: [],
       selectedGenre: '',
       selectedRating: '',
-      allMovies: [], 
       genresMap: {
         28: "Action",
         12: "Adventure",
@@ -76,12 +72,12 @@ export default {
         18: "Drama",
         14: "Fantasy",
         27: "Horror",
-        53: "Thriller",
-        10749: "Romance",
-        878: "Sci-Fi",
-        10402: "Music",
-        9648: "Mystery",
         37: "Western",
+        53: "Thriller",
+        878: "Sci-Fi",
+        9648: "Mystery",
+        10402: "Music",
+        10749: "Romance",
         10751: "Family",
       },
     };
@@ -91,37 +87,13 @@ export default {
       const maxVisible = 4;
       let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
       let end = Math.min(this.totalPages, start + maxVisible - 1);
-
-      if (start > 1) {
-        start = Math.max(1, end - maxVisible + 1);
-      }
-
       return this.totalPages > 1 ? Array.from({ length: end - start + 1 }, (_, i) => start + i) : [1];
     },
   },
   watch: {
-    searchQuery: {
-      immediate: true,
-      handler(newQuery) {
-        if (!newQuery) {
-          this.allMovies = [];
-        }
-        this.currentPage = 1;
-        this.fetchMovies();
-      },
-    },
-    selectedGenre: {
-      handler() {
-        this.currentPage = 1;
-        this.fetchMovies();
-      },
-    },
-    selectedRating: {
-      handler() {
-        this.currentPage = 1;
-        this.fetchMovies();
-      },
-    },
+    searchQuery: "fetchMovies",
+    selectedGenre: "fetchMovies",
+    selectedRating: "fetchMovies",
     genre: {
       immediate: true,
       handler(newGenre) {
@@ -131,118 +103,57 @@ export default {
     },
   },
   created() {
-    if (this.genre) {
-      this.selectedGenre = this.genre;
-    }
     this.fetchMovies();
   },
   methods: {
-    async fetchAllMovies() {
-      const apiKey = import.meta.env.VITE_APP_API_KEY;
-      let allMovies = [];
-      let currentPage = 1;
-      let totalPages = 1;
-
-      try {
-        while (currentPage <= totalPages) {
-          const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${encodeURIComponent(this.searchQuery)}&page=${currentPage}`;
-          const response = await axios.get(url);
-          allMovies = allMovies.concat(response.data.results);
-          totalPages = response.data.total_pages;
-          currentPage++;
-        }
-      } catch (error) {
-        console.error("Error fetching all movies:", error);
-      }
-    async fetchMovies() {
-  this.loading = true;
-  const apiKey = import.meta.env.VITE_APP_API_KEY;
-
-  try {
-    let url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&page=${this.currentPage}`;
-
-    if (this.selectedGenre && this.selectedGenre !== "") {
-      let genreId = Number(this.selectedGenre);
-
     async fetchMovies() {
       this.loading = true;
+      const apiKey = import.meta.env.VITE_APP_API_KEY;
+      let endpointType = 'discover';
+      if (this.searchQuery) {
+        endpointType = 'search';
+      }
+
+      let url = `https://api.themoviedb.org/3/${endpointType}/movie?api_key=${apiKey}&language=en-US`;
+      
+      if (this.searchQuery) {
+        url += `&query=${encodeURIComponent(this.searchQuery)}`;
+      }
+
+      url += `&page=${this.currentPage}`;
+
+      // selectedGenre : number | string
+      if (this.selectedGenre && this.selectedGenre !== "") {
+        let genreId = Number(this.selectedGenre);
+
+        // If NaN, find id
+        if (isNaN(genreId)) {
+          genreId = Object.keys(this.genresMap).find(
+            key => this.genresMap[key].toLowerCase() === this.selectedGenre.toLowerCase()
+          );
+        }
+
+        if (genreId) {
+          url += `&with_genres=${genreId}`;
+        }
+      }
+      if (this.selectedRating === 'asc') {
+        url += `&sort_by=vote_average.asc`;
+      }
+      if (this.selectedRating === 'desc') {
+        url += `&sort_by=vote_average.desc`;
+      }
 
       try {
-        if (this.searchQuery) {
-          if (this.allMovies.length === 0) {
-            this.allMovies = await this.fetchAllMovies();
-          }
-
-          let filteredMovies = this.allMovies;
-
-          if (this.selectedGenre) {
-            filteredMovies = filteredMovies.filter(movie =>
-              movie.genre_ids && movie.genre_ids.includes(Number(this.selectedGenre))
-            );
-          }
-
-          if (this.selectedRating === 'asc') {
-            filteredMovies.sort((a, b) => a.vote_average - b.vote_average);
-          } else if (this.selectedRating === 'desc') {
-            filteredMovies.sort((a, b) => b.vote_average - a.vote_average);
-          }
-
-          const startIndex = (this.currentPage - 1) * this.moviesPerPage;
-          const endIndex = startIndex + this.moviesPerPage;
-          this.movies = filteredMovies.slice(startIndex, endIndex);
-
-          this.totalPages = Math.min(10, Math.ceil(filteredMovies.length / this.moviesPerPage));
-        } else {
-          const apiKey = import.meta.env.VITE_APP_API_KEY;
-          let url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&page=${this.currentPage}`;
-
-          if (this.selectedGenre) {
-            url += `&with_genres=${this.selectedGenre}`;
-          }
-
-          if (this.selectedRating === 'asc') {
-            url += `&sort_by=vote_average.asc`;
-          } else if (this.selectedRating === 'desc') {
-            url += `&sort_by=vote_average.desc`;
-          }
-
-          const response = await axios.get(url);
-          this.movies = response.data.results;
-          this.totalPages = response.data.total_pages;
-        }
+        const response = await axios.get(url);
+        this.movies = response.data.results;
+        this.totalPages = response.data.total_pages;
       } catch (error) {
         console.error("Error fetching movies:", error);
       } finally {
         this.loading = false;
-      // If NaN, find id
-      if (isNaN(genreId)) {
-        genreId = Object.keys(this.genresMap).find(
-          key => this.genresMap[key].toLowerCase() === this.selectedGenre.toLowerCase()
-        );
       }
-
-      if (genreId) {
-        url += `&with_genres=${genreId}`;
-      }
-
-  }
-
-    if (this.selectedRating === "asc") {
-      url += `&sort_by=vote_average.asc`;
-    } else if (this.selectedRating === "desc") {
-      url += `&sort_by=vote_average.desc`;
-    }
-
-    const response = await axios.get(url);
-    this.movies = response.data.results;
-    this.totalPages = response.data.total_pages;
-  } catch (error) {
-    console.error("Error fetching movies:", error);
-  } finally {
-    this.loading = false;
-  }
     },
-
     goToPage(page) {
       if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
         this.currentPage = page;
@@ -320,17 +231,7 @@ export default {
   justify-content: center;
 }
 
-.nav-button {
-  background-color: #1a1a1a;
-  color: #F1F1F1;
-  padding: 8px 15px;
-  border-radius: 20px;
-  cursor: pointer;
-  border: none;
-  font-size: 15px;
-}
-
-.page-button {
+.nav-button, .page-button {
   background: none;
   color: white;
   padding: 8px 15px;
@@ -338,10 +239,6 @@ export default {
   border-radius: 30px;
   font-size: 16px;
   cursor: pointer;
-}
-
-.page-button:hover {
-  background-color: #1a1a1a;
 }
 
 .page-button.active {
