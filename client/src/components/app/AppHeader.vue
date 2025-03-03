@@ -4,7 +4,7 @@
       <router-link :to="`/`" id="logo">
         <div id="logo">
           <a href="/">
-            <h1>MovieClub</h1>
+            <h1 class="font-bold">MovieClub</h1>
           </a>
         </div>
       </router-link>

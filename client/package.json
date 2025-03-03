@@ -1,6 +1,7 @@
 {
   "name": "movie-club",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "author": "@romhenri",
   "description": "",
   "scripts": {
     "dev": "vite",
@@ -11,6 +12,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "axios": "^1.8.1",
     "pinia": "^2.1.7",
     "unocss": "^0.58.0",
     "vue": "^3.3.13",
